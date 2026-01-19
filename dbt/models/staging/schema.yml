@@ -1,0 +1,69 @@
+version: 2
+
+models:
+  - name: stg_matches
+    description: "Cleaned match data with derived fields"
+    columns:
+      - name: match_id
+        description: "Unique match identifier"
+        tests:
+          - unique
+          - not_null
+      - name: home_team_name
+        tests:
+          - not_null
+      - name: away_team_name
+        tests:
+          - not_null
+      - name: home_score
+        tests:
+          - not_null
+      - name: away_score
+        tests:
+          - not_null
+      - name: result
+        tests:
+          - accepted_values:
+              values: ['HOME', 'AWAY', 'DRAW']
+
+  - name: stg_standings
+    description: "League standings with calculated metrics"
+    columns:
+      - name: team_id
+        tests:
+          - unique
+          - not_null
+      - name: team_name
+        tests:
+          - not_null
+      - name: position
+        tests:
+          - not_null
+      - name: points
+        tests:
+          - not_null
+
+  - name: stg_scorers
+    description: "Top scorers with goal contribution metrics"
+    columns:
+      - name: player_id
+        tests:
+          - unique
+          - not_null
+      - name: player_name
+        tests:
+          - not_null
+      - name: goals
+        tests:
+          - not_null
+
+  - name: stg_teams
+    description: "Team information and metadata"
+    columns:
+      - name: team_id
+        tests:
+          - unique
+          - not_null
+      - name: team_name
+        tests:
+          - not_null

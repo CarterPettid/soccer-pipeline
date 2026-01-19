@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: fct_team_performance
+    description: "Aggregated team performance metrics"
+    columns:
+      - name: team_id
+        tests:
+          - unique
+          - not_null
+      - name: team_name
+        tests:
+          - not_null
+      - name: total_points
+        tests:
+          - not_null
+      - name: total_games
+        tests:
+          - not_null
