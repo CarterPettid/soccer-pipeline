@@ -25,3 +25,19 @@ class FootballDataClient:
         response = requests.get(url, headers=self.headers, params=params)
         response.raise_for_status()
         return response.json()["standings"]
+
+    def get_scorers(self, competition="PL", season=2024, limit=20):
+        """Fetch top scorers for a competition."""
+        url = f"{self.BASE_URL}/competitions/{competition}/scorers"
+        params = {"season": season, "limit": limit}
+        response = requests.get(url, headers=self.headers, params=params)
+        response.raise_for_status()
+        return response.json()["scorers"]
+    
+    def get_teams(self, competition="PL", season=2024):
+        """Fetch all teams in a competition."""
+        url = f"{self.BASE_URL}/competitions/{competition}/teams"
+        params = {"season": season}
+        response = requests.get(url, headers=self.headers, params=params)
+        response.raise_for_status()
+        return response.json()["teams"]

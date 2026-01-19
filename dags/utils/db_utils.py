@@ -104,3 +104,78 @@ def upsert_standing(standing):
         ingested_at = CURRENT_TIMESTAMP;
     """
     execute_sql(sql, standing)
+
+def create_scorers_table():
+    sql = """
+    CREATE TABLE IF NOT EXISTS raw_scorers (
+        id SERIAL PRIMARY KEY,
+        competition VARCHAR(10),
+        season INTEGER,
+        player_id INTEGER,
+        player_name VARCHAR(100),
+        nationality VARCHAR(50),
+        team_id INTEGER,
+        team_name VARCHAR(100),
+        goals INTEGER,
+        assists INTEGER,
+        penalties INTEGER,
+        ingested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(competition, season, player_id)
+    );
+    """
+    execute_sql(sql)
+
+def upsert_scorer(scorer):
+    sql = """
+    INSERT INTO raw_scorers (
+        competition, season, player_id, player_name, nationality,
+        team_id, team_name, goals, assists, penalties
+    ) VALUES (
+        %(competition)s, %(season)s, %(player_id)s, %(player_name)s,
+        %(nationality)s, %(team_id)s, %(team_name)s, %(goals)s,
+        %(assists)s, %(penalties)s
+    )
+    ON CONFLICT (competition, season, player_id) DO UPDATE SET
+        goals = EXCLUDED.goals,
+        assists = EXCLUDED.assists,
+        penalties = EXCLUDED.penalties,
+        team_id = EXCLUDED.team_id,
+        team_name = EXCLUDED.team_name,
+        ingested_at = CURRENT_TIMESTAMP;
+    """
+    execute_sql(sql, scorer)
+
+def create_teams_table():
+    sql = """
+    CREATE TABLE IF NOT EXISTS raw_teams (
+        team_id INTEGER PRIMARY KEY,
+        team_name VARCHAR(100),
+        short_name VARCHAR(50),
+        tla VARCHAR(5),
+        crest_url VARCHAR(255),
+        address VARCHAR(255),
+        website VARCHAR(255),
+        founded INTEGER,
+        venue VARCHAR(100),
+        ingested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """
+    execute_sql(sql)
+
+def upsert_team(team):
+    sql = """
+    INSERT INTO raw_teams (
+        team_id, team_name, short_name, tla, crest_url,
+        address, website, founded, venue
+    ) VALUES (
+        %(team_id)s, %(team_name)s, %(short_name)s, %(tla)s,
+        %(crest_url)s, %(address)s, %(website)s, %(founded)s, %(venue)s
+    )
+    ON CONFLICT (team_id) DO UPDATE SET
+        team_name = EXCLUDED.team_name,
+        short_name = EXCLUDED.short_name,
+        crest_url = EXCLUDED.crest_url,
+        venue = EXCLUDED.venue,
+        ingested_at = CURRENT_TIMESTAMP;
+    """
+    execute_sql(sql, team)
