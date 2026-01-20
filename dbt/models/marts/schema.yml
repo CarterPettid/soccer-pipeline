@@ -17,3 +17,70 @@ models:
       - name: total_games
         tests:
           - not_null
+
+  - name: fct_player_performance
+    description: "Player statistics with rankings and team info"
+    columns:
+      - name: player_id
+        tests:
+          - unique
+          - not_null
+      - name: player_name
+        tests:
+          - not_null
+      - name: goals
+        tests:
+          - not_null
+
+  - name: fct_form_table
+    description: "Last 5 matches form for each team"
+    columns:
+      - name: team_id
+        tests:
+          - unique
+          - not_null
+      - name: team_name
+        tests:
+          - not_null
+      - name: form_string
+        description: "W/D/L string for last 5 matches (most recent first)"
+
+  - name: fct_head_to_head
+    description: "Historical matchup statistics between teams"
+    columns:
+      - name: team_a_id
+        tests:
+          - not_null
+      - name: team_b_id
+        tests:
+          - not_null
+      - name: total_matches
+        tests:
+          - not_null
+
+  - name: dim_teams
+    description: "Enriched team dimension with current standings"
+    columns:
+      - name: team_id
+        tests:
+          - unique
+          - not_null
+      - name: team_name
+        tests:
+          - not_null
+      - name: league_tier
+        description: "Classification based on position (Champions League, Europa League, Mid-Table, Relegation Zone)"
+
+  - name: fct_monthly_goals
+    description: "Monthly goal-scoring trends and statistics"
+    columns:
+      - name: month
+        tests:
+          - unique
+          - not_null
+      - name: matches_played
+        tests:
+          - not_null
+      - name: total_goals
+        tests:
+          - not_null

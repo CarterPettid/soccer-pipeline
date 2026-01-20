@@ -52,6 +52,11 @@ soccer-pipeline/
 │   │   │   ├── stg_teams.sql
 │   │   │   └── schema.yml
 │   │   └── marts/
+│   │       ├── dim_teams.sql
+│   │       ├── fct_form_table.sql
+│   │       ├── fct_head_to_head.sql
+│   │       ├── fct_monthly_goals.sql
+│   │       ├── fct_player_performance.sql
 │   │       ├── fct_team_performance.sql
 │   │       └── schema.yml
 │   ├── dbt_project.yml
@@ -81,7 +86,12 @@ soccer-pipeline/
 - `stg_teams` — Teams with years_since_founding
 
 ### Marts Layer
+- `dim_teams` — Enriched team dimension with current standings and league tier classification
 - `fct_team_performance` — Aggregated home/away performance metrics
+- `fct_player_performance` — Player statistics with rankings across goals, assists, and contributions
+- `fct_form_table` — Last 5 matches form for each team with W/D/L string
+- `fct_head_to_head` — Historical matchup statistics between team pairs
+- `fct_monthly_goals` — Monthly goal-scoring trends and statistics
 
 ## Pipeline Orchestration
 
@@ -100,6 +110,21 @@ The `master_pl_pipeline` DAG orchestrates the entire workflow:
 ```
 
 Ingestion tasks run in parallel, then dbt transformations run after all ingestion completes.
+
+## Dashboard
+
+The Streamlit dashboard provides 8 interactive pages:
+
+| Page | Description |
+|------|-------------|
+| **League Table** | Current standings with points visualization |
+| **Form Table** | Last 5 matches performance with W/D/L form strings |
+| **Top Scorers** | Player rankings with goals vs assists breakdown |
+| **Team Performance** | Home/away metrics and points per game |
+| **Head to Head** | Interactive team comparison with historical matchups |
+| **Monthly Trends** | Goal-scoring patterns over time |
+| **Teams Directory** | Club information filterable by league tier |
+| **Recent Matches** | Latest results with goals distribution |
 
 ## Data Quality
 
@@ -168,6 +193,8 @@ View results in the Streamlit dashboard at http://localhost:8501
 - **Idempotent ingestion** — Upserts prevent duplicate data
 - **Incremental updates** — Daily scheduled refreshes
 - **Data quality tests** — dbt tests validate transformations
+- **Rich analytics** — 6 mart models for comprehensive insights
+- **Interactive dashboard** — 8 pages with filters and visualizations
 - **Containerized** — Fully reproducible with Docker
 
 ## Dashboard Screenshots
